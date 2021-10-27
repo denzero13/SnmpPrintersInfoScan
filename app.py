@@ -68,6 +68,6 @@ class AppVisual:
         ])
     ])
 
-    app.run_server(debug=True, host='172.16.0.13')
+    app.run_server(debug=True)
 
 
