@@ -1,4 +1,4 @@
-cd C:\Users\dpavliuk\PycharmProjects\SNMPscan
+cd YOUR PATH
 python main_for_bat.py
 :loop
 @ECHO OFF
