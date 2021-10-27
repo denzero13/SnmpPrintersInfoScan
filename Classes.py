@@ -1,7 +1,7 @@
 import pandas as pd
+from config import tmp, visual_for_terminal
 
 
-# termgraph visual.csv --color {blue,red} --stacked --title "Stacked Data" --width 200
 class PrinterModel:
     def __init__(self, device):
         self.device = device
@@ -18,7 +18,7 @@ class PrinterModel:
                             PrintsColor="1.3.6.1.4.1.1347.42.2.1.1.1.8.1.1", ip_host="1.3.6.1.4.1.2699.1.2.1.3.1.1.4.1.3")
 
         self.OKI = dict(location="1.3.6.1.2.1.1.6.0", model="1.3.6.1.2.1.25.3.2.1.3.1",
-                        InventoryNumber="1.3.6.1.4.1.1347.40.10.1.1.5.1", TonerModel="1.3.6.1.2.1.43.11.1.1.6.1.1",
+                        InventoryNumber="1.3.6.1.4.1.1347.40.10.1.1.5.1", TonerModel="1.3.6.1.2.1.43.12.1.1.4.1.1",
                         TonerType="1.3.6.1.2.1.43.12.1.1.4.1.1", TonerLevel="1.3.6.1.2.1.43.11.1.1.9.1.1",
                         CartridgeMaxCapacity="1.3.6.1.2.1.43.11.1.1.8.1.1", PrintsBlack="1.3.6.1.4.1.1347.43.10.1.1.12.1.1",
                         PrintsColor="1.3.6.1.4.1.1347.42.2.1.1.1.8.1.1", ip_host="1.3.6.1.4.1.2699.1.2.1.3.1.1.4.1.3")
@@ -49,12 +49,12 @@ class PrinterModel:
         return model
 
 
-class DataForVisual:
+class DataPreparationForVisual:
     def __init__(self):
-        df = pd.read_csv("tmp.csv")
+        df = pd.read_csv(tmp)
 
         try:
-            df["Level"] = [float(float(df["TonerLevel"][i]) * 100 /
+            df["Level"] = [int(float(df["TonerLevel"][i]) * 100 /
                                  float(df["CartridgeMaxCapacity"][i])) for i in range(len(df))]
             df["Max"] = [100 - df["Level"][i] for i in range(len(df))]
             df["Full Name"] = [str(df["location"][i]) + " -- " + str(df["TonerModel"][i]) +
@@ -62,6 +62,9 @@ class DataForVisual:
 
             df.set_index("Full Name", inplace=True)
             plot_data = df[["Level", "Max"]].sort_values("Max")
-            csv = plot_data.to_csv("visual.csv", header=None)
+            csv = plot_data.to_csv(visual_for_terminal , header=None)
         except [TypeError, KeyError]:
             print("Host don`t have name")
+
+
+DataPreparationForVisual()
